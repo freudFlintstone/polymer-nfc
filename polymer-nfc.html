@@ -1,0 +1,76 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="polymer-nfc">
+
+  <script>
+    /**
+     * `polymer-nfc`
+     * Web Component for NFC reading and writing using WebNFC W3C Draft Standard.  
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class PolymerNfc extends Polymer.Element {
+      static get is() { return 'polymer-nfc'; }
+      static get properties() {
+        return {
+          watch: {
+            type: Boolean,
+            reflectToAttribute: true,
+            notify: true,
+            value: false,
+            observer: ['_watchChanged']
+          },
+          data: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true,
+            value: function() {
+              return {"key": "value"};
+            }
+          }
+        };
+      }
+
+      _watchChanged(watch) {
+        console.log('watch changed: ' + this.watch)
+        if (watch) {
+          navigator.nfc.watch(message => {
+            if (this.write) {
+              navigator.nfc.push({
+                records: [
+                  {
+                    recordType: "json",
+                    mediaType: "application/json",
+                    data: this.data
+                  }
+                ]}
+              )
+              .then( () => {
+                console.log('Wrote something');
+                this.fresh = false;
+              }).catch( (error) => {
+                console.log('Error writing: ' + error);
+                console.log('Data: ' + this.data);                
+              });
+            }else{
+              for (let record of message.records) {
+                console.log('Read something');
+                console.log(record);
+                this.data = record.data;
+              }
+            }
+        }, { mode: "any", recordType: "json", passive: true })
+          .then(() => {
+            console.log("Added a watch.");
+          }).catch((error) => {
+            console.log("Adding watch failed: " + error.name);
+          }); 
+        }
+      }
+    }
+
+    window.customElements.define(PolymerNfc.is, PolymerNfc);
+  </script>
+</dom-module>
