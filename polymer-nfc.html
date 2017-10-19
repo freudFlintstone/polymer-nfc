@@ -33,6 +33,14 @@
         };
       }
 
+      readOn() {
+        this.watch = true;
+      }
+
+      readOff() {
+        this.watch = false;
+      }
+
       _watchChanged(watch) {
         console.log('watch changed: ' + this.watch)
         if (watch) {
@@ -67,6 +75,8 @@
           }).catch((error) => {
             console.log("Adding watch failed: " + error.name);
           }); 
+        } else {
+          this.data = {};
         }
       }
     }
