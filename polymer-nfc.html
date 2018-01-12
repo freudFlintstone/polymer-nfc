@@ -20,7 +20,7 @@
             reflectToAttribute: true,
             notify: true,
             value: false,
-            observer: ['_watchChanged']
+            observer: '_watchChanged'
           },
           data: {
             type: Object,
@@ -42,7 +42,6 @@
       }
 
       _watchChanged(watch) {
-        console.log('watch changed: ' + this.watch)
         if (watch) {
           navigator.nfc.watch(message => {
             if (this.write) {
@@ -56,24 +55,20 @@
                 ]}
               )
               .then( () => {
-                console.log('Wrote something');
                 this.fresh = false;
               }).catch( (error) => {
-                console.log('Error writing: ' + error);
-                console.log('Data: ' + this.data);                
+                
               });
             }else{
               for (let record of message.records) {
-                console.log('Read something');
-                console.log(record);
                 this.data = record.data;
               }
             }
         }, { mode: "any", recordType: "json", passive: true })
           .then(() => {
-            console.log("Added a watch.");
+
           }).catch((error) => {
-            console.log("Adding watch failed: " + error.name);
+          
           }); 
         } else {
           this.data = {};
