@@ -1,6 +1,6 @@
 # Polymer-NFC
 
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/freudFlintstone/polymer-nfc)
+<!-- [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/freudFlintstone/polymer-nfc) -->
 
 Polymer 2 Web Component for NFC reading and writing using [WebNFC W3C Draft Standard](https://w3c.github.io/web-nfc/).
 ## Installation
