@@ -22,6 +22,18 @@
             value: false,
             observer: '_watchChanged'
           },
+          watchId: {
+            type: Number,
+            notify: true,
+            reflectToAttribute: true,
+            value : null
+          },
+          write: {
+            type: Boolean,
+            reflectToAttribute: true,
+            notify: true,
+            value: false
+          },
           data: {
             type: Object,
             notify: true,
@@ -41,7 +53,16 @@
         this.watch = false;
       }
 
+      writeOn() {
+        this.write = true;
+      }
+
+      writeOff() {
+        this.write = false;
+      }
+
       _watchChanged(watch) {
+        console.log('watch changed: ' + this.watch)
         if (watch) {
           navigator.nfc.watch(message => {
             if (this.write) {
@@ -54,24 +75,34 @@
                   }
                 ]}
               )
-              .then( () => {
-                this.fresh = false;
-              }).catch( (error) => {
+              .then( (written) => {
+                console.log('Wrote something');
+                console.log(written);
+                this.write = false;
                 
+              }).catch( (error) => {
+                console.log('Error writing: ' + error);
+                console.log('Data: ' + this.data);                
               });
             }else{
               for (let record of message.records) {
+                console.log('Read something');
+                console.log(record.data);
                 this.data = record.data;
               }
             }
-        }, { mode: "any", recordType: "json", passive: true })
-          .then(() => {
-
-          }).catch((error) => {
-          
-          }); 
+          }, { mode: "any", recordType: "json", passive: true })
+            .then((response) => {
+              console.log("Added watchId: "+ response);
+              this.watchId = response;
+            }).catch((error) => {
+              console.log("Adding watch failed: " + error.name);
+            }); 
         } else {
-          this.data = {};
+          if (this.watchId) {
+            navigator.nfc.cancelWatch(this.watchId);
+            this.watchId = null;
+          }
         }
       }
     }
