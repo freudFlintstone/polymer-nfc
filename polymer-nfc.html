@@ -25,12 +25,20 @@
           watchId: {
             type: Number,
             notify: true,
+            readOnly: true,
             reflectToAttribute: true,
             value : null
           },
           write: {
             type: Boolean,
             reflectToAttribute: true,
+            notify: true,
+            value: false
+          },
+          error: {
+            type: String,
+            reflectToAttribute: true,
+            readOnly: true,
             notify: true,
             value: false
           },
@@ -41,10 +49,26 @@
             value: function() {
               return {};
             }
+          },
+          logging: {
+            type: Boolean,
+            value: false
+          },
+          recordType: {
+            type: String,
+            value: "json"
+          },
+          mediaType: {
+            type: String,
+            value: "application/json"
           }
         };
       }
 
+      toggleLogging() {
+        this.logging = !this.logging;
+      }
+      
       readOn() {
         this.watch = true;
       }
@@ -69,8 +93,8 @@
               navigator.nfc.push({
                 records: [
                   {
-                    recordType: "json",
-                    mediaType: "application/json",
+                    recordType: this.recordType,
+                    mediaType: this.mediaType,
                     data: this.data
                   }
                 ]}
@@ -91,12 +115,13 @@
                 this.data = record.data;
               }
             }
-          }, { mode: "any", recordType: "json", passive: true })
+          }, { mode: "any", recordType: this.recordType, passive: true })
             .then((response) => {
               console.log("Added watchId: "+ response);
               this.watchId = response;
             }).catch((error) => {
               console.log("Adding watch failed: " + error.name);
+              this.error = error.name;
             }); 
         } else {
           if (this.watchId) {
