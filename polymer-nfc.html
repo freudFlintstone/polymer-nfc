@@ -88,7 +88,7 @@
       _watchChanged(watch) {
         console.log('watch changed: ' + this.watch)
         if (watch) {
-          if !(navigator.nfc) {
+          if (!navigator.nfc) {
             console.log('WebNFC not supported');
             this.readOff;
             return false;
