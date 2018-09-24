@@ -10,39 +10,37 @@ bower install --save polymer-nfc
 ```
 ## Usage
 
-Import it: 
+Import it:
 ```
 <link rel="import" href="../bower_components/polymer-nfc/polymer-nfc.html">
-``` 
+```
 
 Use it:
 ```
-    <polymer-nfc data={{nfcData}}></polymer-nfc>
+    <polymer-nfc data="{{nfcData}}"></polymer-nfc>
 ```
 
 You can also turn reading on and off in two ways:
 
  - Add a boolean __watch__ attribute and bind it to a local variable
 ```
-    <polymer-nfc watch={{flag}} data={{nfcData}}></polymer-nfc>
+    <polymer-nfc watch="{{flag}}" data="{{nfcData}}"></polymer-nfc>
 ```
- 
+
  - Using javascript
 
 ```
     this.$.nfc.readOn();
     this.$.nfc.readOff();
-    
-``` 
+```
 
 You can also write data to a NFC Tag. For this to work, your data must be a valid json object. 
 You'll need to explicitly turn writng on, and provide the data via the __data__ data binding:
 
 ```
     this.$.nfc.writeOn();
-    var nfcData = {someId: 1, someValue:"WebNFC rulez!"};
-
-``` 
+    var nfcData = {someId: 1, someValue: 'WebNFC rulez!'};
+```
 
 After a successful write, write mode is automatically turned off. If there's an error, the component keeps writing enabled, 
 waiting for a new attempt.
